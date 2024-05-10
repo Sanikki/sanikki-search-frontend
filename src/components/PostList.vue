@@ -1,11 +1,31 @@
 <template>
-  原神启动
-  <nav />
-  <img class="madoka" :src="madoka" />
+  <a-list item-layout="horizontal" :data-source="props.postList">
+    <template #renderItem="{ item }">
+      <a-list-item>
+        <a-list-item-meta :description="item.content">
+          <template #title>
+            <a href="https://www.antdv.com/">{{ item.title }}</a>
+          </template>
+          <template #avatar>
+            <a-avatar :src="madoka" />
+          </template>
+        </a-list-item-meta>
+      </a-list-item>
+    </template>
+  </a-list>
 </template>
 
 <script setup lang="ts">
 import madoka from "../assets/madoka.png";
+import { withDefaults, defineProps } from "vue";
+
+interface Props {
+  postList: any[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  postList: () => [],
+});
 </script>
 
 <style scoped>
