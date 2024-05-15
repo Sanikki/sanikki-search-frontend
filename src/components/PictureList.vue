@@ -1,15 +1,33 @@
 <template>
-  原神启动
-  <nav />
-  <img class="madoka" :src="madoka" />
+  <a-list
+    item-layout="horizontal"
+    :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }"
+    :data-source="props.pictureList"
+  >
+    <template #renderItem="{ item }">
+      <a-list-item>
+        <a-card hoverable>
+          <template #cover>
+            <img :src="item.url" />
+          </template>
+          <a-card-meta :title="item.title" />
+        </a-card>
+      </a-list-item>
+    </template>
+  </a-list>
 </template>
 
 <script setup lang="ts">
-import madoka from "../assets/madoka.png";
+import { withDefaults, defineProps } from "vue";
+
+interface Props {
+  pictureList: any[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  pictureList: () => [],
+});
+console.log(props.pictureList);
 </script>
 
-<style scoped>
-.madoka {
-  height: 400px;
-}
-</style>
+<style scoped></style>

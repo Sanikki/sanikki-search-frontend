@@ -12,7 +12,7 @@
         <PostList :post-list="postList" />
       </a-tab-pane>
       <a-tab-pane key="picture" tab="图片" force-render>
-        <PictureList />
+        <PictureList :picture-list="pictureList" />
       </a-tab-pane>
       <a-tab-pane key="user" tab="用户">
         <UserList :user-list="userList" />
@@ -39,17 +39,9 @@ const initSearchParams = {
 const searchParams = ref(initSearchParams);
 const activeKey = route.params.category;
 const postList = ref([]);
+const pictureList = ref([]);
 const userList = ref([]);
-myAxios.post("/post/list/page/vo", {}).then((res: any) => {
-  console.log(res);
-  postList.value = res.records;
-  console.log(postList);
-});
 
-myAxios.post("/user/list/page/vo", {}).then((res: any) => {
-  userList.value = res.records;
-  console.log(userList);
-});
 watchEffect(() => {
   searchParams.value = {
     ...initSearchParams,
@@ -57,12 +49,36 @@ watchEffect(() => {
   } as any;
 });
 
+const loadData = (params: any) => {
+  const postQuery = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post("/post/list/page/vo", postQuery).then((res: any) => {
+    postList.value = res.records;
+  });
+  const pictureQuery = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post("/picture/list/page/vo", pictureQuery).then((res: any) => {
+    pictureList.value = res.records;
+  });
+  const userQuery = {
+    ...params,
+    userName: params.text,
+  };
+  myAxios.post("/user/list/page/vo", userQuery).then((res: any) => {
+    userList.value = res.records;
+  });
+};
+loadData(initSearchParams);
 const onSearch = () => {
   router.push({
     query: searchParams.value,
   });
+  loadData(searchParams.value);
 };
-
 const onTabChange = (key: string) => {
   router.push({
     path: `/${key}`,
