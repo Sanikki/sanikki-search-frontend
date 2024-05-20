@@ -72,7 +72,20 @@ const loadData = (params: any) => {
     userList.value = res.records;
   });
 };
-loadData(initSearchParams);
+// 聚合搜索
+const loadDataByAll = (params: any) => {
+  const query = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post("/search/all", query).then((res: any) => {
+    postList.value = res.postList;
+    pictureList.value = res.pictureList;
+    userList.value = res.userList;
+  });
+};
+loadDataByAll(initSearchParams);
+
 const onSearch = () => {
   router.push({
     query: searchParams.value,
